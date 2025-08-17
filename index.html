@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <title>Fitterskist App</title>
-  <!-- Voorkomt ongewenst inzoomen/scrollen op mobiel! -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <style>
+<meta charset="UTF-8" />
+<title>Fitterskist App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<style>
 html, body {margin:0; padding:0; min-height:100%; background:#3f888f; font-family: Arial,sans-serif; color:#002626;}
 .hide {display:none !important;}
 header {background:#002626;color:#e7bb41;padding:15px 0;text-align:center;position:relative;font-weight:bold;font-size:1.2em;}
 .menu-btn {
   position:absolute;right:20px;top:13px;background:none;border:none;
-  color:#fff;font-size:2em;cursor:pointer;line-height:1;z-index:20;
+  color:#e7bb41;font-size:2em;cursor:pointer;line-height:1;z-index:20;
   display:flex;align-items:center;justify-content:center;width:40px;height:40px;
-  }
+}
 .menu-btn:focus {outline:none;border:2px solid #e7bb41;}
-.menu-icon {display:inline-block;width:1.7em;height:1.6em;}
+.menu-icon {display:inline-block;width:30px;height:22px;}
 .menu-icon span {
-  display:block;width:100%;height:0.23em;border-radius:2px;
-  background:#e7bb41;margin:0.28em 0;
-  transition:background .15s;
+  display:block;
+  height:4px;
+  width:100%;
+  background:#e7bb41;
+  border-radius:3px;
+  margin:4px 0;
 }
 .menu-panel {
   display:none;position:fixed;top:0;right:0;width:210px;background:#fff;border-radius:0 0 0 13px;
@@ -39,380 +41,679 @@ header {background:#002626;color:#e7bb41;padding:15px 0;text-align:center;positi
   text-align:right;font-size:1.3em;background:none;border:none;color:#999;
   padding:11px 15px 2px 0;width:auto;display:block;cursor:pointer;
 }
-#pwlock {position:fixed;top:0;left:0;right:0;bottom:0;background:#3f888f;display:flex;align-items:center;justify-content:center;z-index:10000;}
-#pwbox {background:rgba(255,255,255,0.13);border-radius:22px;padding:42px 24px 36px 24px;width:390px;max-width:98vw;box-shadow:0 6px 32px #23515155;text-align:center;}
-#pwbox svg {max-width:260px;width:99vw;margin:auto;margin-bottom:38px;display:block;}
-#pwbox label {color:white;font-weight:bold;font-size:1.13em;margin-bottom:14px;display:block;}
-#pwbox input {width:160px;font-size:1.19em;border-radius:7px;padding:10px 8px;border:1.5px solid #21969d;text-align:center;outline:none;letter-spacing:0.14em;}
-#pwbox input:focus {border-color:#e7bb41;}
-#pwbox button {margin-top:18px;width:120px;font-weight:bold;font-size:1.15em;background:#e7bb41;border-radius:7px;color:#293a33;border:none;padding:10px 0;cursor:pointer;box-shadow:0 2px 10px #0002;}
-#pwbox button:hover {background:#fffbe7;color:#0a282d;}
-#pwerror {margin-top:15px;color:#c33;font-weight:bold;display:none;}
-.container {max-width:900px;margin:1rem auto;padding:8px;background:#d3d0cb;border-radius:8px;}
-label{font-weight:bold;display:block;margin-bottom:5px;}
-input[type=text],input[type=number]{width:300px;max-width:100%;padding:8px;border-radius:4px;border:1px solid #ccc;margin-bottom:12px;font-size:1rem;}
-button,button.start-btn{background:#3f888f;color:#fff;font-size:1rem;border:none;border-radius:5px;padding:10px 14px;cursor:pointer;transition:background 0.25s;margin:5px 0;user-select:none;}
-button.start-btn{background:#002626;font-weight:bold;font-size:1.09rem;padding:13px 20px;}
-button:hover, .art-actions button:hover{background:#e7bb41;color:#002626;}
-button.start-btn:hover{background:#e7bb41;color:#002626;}
-.art-list{display:flex;flex-direction:column;gap:8px;}
-.art-card{display:flex;align-items:center;background:#fff;border-radius:6px;padding:8px;box-shadow:0 1px 2px rgba(0,38,38,0.1);min-height:60px;}
-.art-img{width:32px;height:32px;font-size:1.1em;display:flex;justify-content:center;align-items:center;background:#e7e5df;border-radius:5px;border:1px solid #e7bb41;flex-shrink:0;margin-left:12px;}
-.art-info{flex:1;padding-right:12px;}
-.art-info h4{margin:0 0 3px 0;font-size:1.05rem;line-height:1.25;}
-.art-info .details{font-size:0.8rem;color:#555;line-height:1.2;}
-.art-actions{display:flex;align-items:center;gap:6px;margin-right:12px;}
-.art-actions input{width:48px;font-size:0.95rem;padding:4px 6px;text-align:center;border-radius:4px;border:1px solid #ccc;}
-.art-actions button{padding:3px 10px;font-size:1.08em;min-width:28px;}
-table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff;font-size:0.9rem;}
-th,td{border:1px solid #ddd;padding:6px 8px;text-align:left;}
-th{background:#3f888f;color:#fff;font-weight:bold;font-size:0.85rem;}
-tfoot td{font-weight:bold;background:#e7bb41;}
-td.mistcell{background:#ffeaea !important;color:#c33 !important;font-weight:bold;}
-.overzicht-buttons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px;}
-.overzicht-buttons button{flex:1;min-width:130px;max-width:200px;}
-.status-info{background:#3bb273;color:#fff;padding:9px 14px;border-radius:7px;font-weight:bold;box-shadow:0 2px 6px #2228;text-align:center;display:inline-block;min-width:120px;margin-bottom:7px;margin-top:3px;}
-#flashmsg{position:fixed;right:30px;top:80px;z-index:103;background:#3bb273;color:#fff;padding:9px 16px;border-radius:7px;font-weight:bold;box-shadow:0 2px 6px #2228;display:none;}
-@media (max-width:600px){
-  body,html{font-size:14px;}
-  header h1{font-size:1.1rem;}
-  .menu-btn{font-size:1.7rem;width:35px;height:35px;}
-  .art-card{flex-direction:column;align-items:flex-start;}
-  .art-actions{margin:10px 0 0 0;justify-content:flex-start;}
-  .art-actions input{width:40px;}
-  input[type=text],input[type=number]{width:97%;}
-  .menu-panel{width:92vw;max-width:290px;}
-  .container{padding:5px;}
-  #pwbox{width:99vw;}
-  #pwbox svg{max-width:92vw;}
+#pwlock {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: #3f888f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
 }
-</style>
+#pwbox {
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: 22px;
+  padding: 42px 24px 36px 24px;
+  width: 390px;
+  max-width: 98vw;
+  box-shadow: 0 6px 32px #23515155;
+  text-align: center;
+}
+#pwbox svg {
+  max-width: 260px;
+  width: 99vw;
+  margin: auto;
+  margin-bottom: 38px;
+  display: block;
+}
+#pwbox label {
+  color: white;
+  font-weight: bold;
+  font-size: 1.13em;
+  margin-bottom: 14px;
+  display: block;
+}
+#pwbox input {
+  width: 160px;
+  font-size: 1.19em;
+  border-radius: 7px;
+  padding: 10px 8px;
+  border: 1.5px solid #21969d;
+  text-align: center;
+  outline: none;
+  letter-spacing: 0.14em;
+}
+#pwbox input:focus {
+  border-color: #e7bb41;
+}
+#pwbox button {
+  margin-top: 18px;
+  width: 120px;
+  font-weight: bold;
+  font-size: 1.15em;
+  background: #e7bb41;
+  border-radius: 7px;
+  color: #293a33;
+  border: none;
+  padding: 10px 0;
+  cursor: pointer;
+  box-shadow: 0 2px 10px #0002;
+}
+#pwbox button:hover {
+  background: #fffbe7;
+  color: #0a282d;
+}
+#pwerror {
+  margin-top: 15px;
+  color: #c33;
+  font-weight: bold;
+  display: none;
+}
+.container {
+  max-width: 900px;
+  margin: 1rem auto;
+  padding: 8px;
+  background: #d3d0cb;
+  border-radius: 8px;
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+input[type=text], input[type=number] {
+  width: 300px;
+  max-width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+button, button.start-btn {
+  background: #3f888f;
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  margin: 5px 0;
+  user-select: none;
+}
+button.start-btn {
+  background: #002626;
+  font-weight: bold;
+  font-size: 1.11rem;
+  padding: 13px 20px;
+}
+button:hover, .art-actions button:hover {
+  background: #e7bb41;
+  color: #002626;
+}
+button.start-btn:hover {
+  background: #e7bb41;
+  color: #002626;
+}
+.art-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.art-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 1px 2px rgba(0, 38, 38, 0.1);
+  min-height: 60px;
+}
+.art-img {
+  width: 32px;
+  height: 32px;
+  font-size: 1.1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e7e5df;
+  border-radius: 5px;
+  border: 1px solid #e7bb41;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+.art-info {
+  flex: 1;
+  padding-right: 12px;
+}
+.art-info h4 {
+  margin: 0 0 3px 0;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+.art-info .details {
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.2;
+}
+.art-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 12px;
+}
+.art-actions input {
+  width: 48px;
+  font-size: 0.95rem;
+  padding: 4px 6px;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.art-actions button {
+  padding: 3px 10px;
+  font-size: 1.08em;
+  min-width: 28px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  background: #fff;
+  font-size: 0.9rem;
+}
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  text-align: left;
+}
+th {
+  background: #3f888f;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+tfoot td {
+  font-weight: bold;
+  background: #e7bb41;
+}
+td.mistcell {
+  background: #ffeaea !important;
+  color: #c33 !important;
+  font-weight: bold;
+}
+.overzicht-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 16px;
+}
+.overzicht-buttons button {
+  flex: 1;
+  min-width: 130px;
+  max-width: 200px;
+}
+.status-info {
+  background: #3bb273;
+  color: #fff;
+  padding: 9px 14px;
+  border-radius: 7px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px #2228;
+  text-align: center;
+  display: inline-block;
+  min-width: 120px;
+  margin-bottom: 7px;
+  margin-top: 3px;
+}
+#flashmsg {
+  position: fixed;
+  right: 30px;
+  top: 80px;
+  z-index: 103;
+  background: #3bb273;
+  color: #fff;
+  padding: 9px 16px;
+  border-radius: 7px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px #2228;
+  display: none;
+}
+@media (max-width: 600px) {
+  body,
+  html {
+    font-size: 14px;
+  }
+  header h1 {
+    font-size: 1.1rem;
+  }
+  .menu-btn {
+    font-size: 1.7rem;
+    width: 35px;
+    height: 35px;
+  }
+  .art-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .art-actions {
+    margin: 10px 0 0 0;
+    justify-content: flex-start;
+  }
+  .art-actions input {
+    width: 40px;
+  }
+  input[type=text],
+  input[type=number] {
+    width: 97%;
+  }
+  .menu-panel {
+    width: 92vw;
+    max-width: 290px;
+  }
+  .container {
+    padding: 5px;
+  }
+  #pwbox {
+    width: 99vw;
+  }
+  #pwbox svg {
+    max-width: 92vw;
+  }
+}
+  </style>
 </head>
 <body>
-<!-- Wachtwoordscherm -->
-<div id="pwlock">
-  <div id="pwbox" role="dialog" aria-modal="true">
-    <svg aria-hidden="true" focusable="false" viewBox="0 0 500 210">
-      <rect x="50" y="75" width="400" height="110" rx="26" fill="#383c43" stroke="#222" stroke-width="5"/>
-      <rect x="70" y="44" width="360" height="48" rx="14" fill="#24282e" stroke="#191a1c" stroke-width="2.8"/>
-      <rect x="70" y="119" width="50" height="28" rx="9" fill="#e7bb41" stroke="#b89d2f" stroke-width="3.5"/>
-      <rect x="380" y="119" width="50" height="28" rx="9" fill="#e7bb41" stroke="#b89d2f" stroke-width="3.5"/>
-      <ellipse cx="250" cy="200" rx="185" ry="14.5" fill="#23515155"/>
-      <rect x="70" y="89" width="360" height="7.7" fill="#bfc9d1"/>
-      <rect x="204" y="122" width="92" height="37" rx="8" fill="#e7bb41"/>
-      <text x="250" y="149" font-size="32" fill="#2b2b1a" font-family="Arial" text-anchor="middle" font-weight="bold" letter-spacing="4.6">STANLEY</text>
-    </svg>
-    <label for="pwinput">Voer wachtwoord in</label>
-    <input type="password" id="pwinput" placeholder="Wachtwoord" autocomplete="off" />
-    <button type="button" onclick="checkpw()">Login</button>
-    <div id="pwerror" role="alert" aria-live="assertive">Fout wachtwoord</div>
-  </div>
-</div>
-
-<header>
-  Gereedschapskist Inventarisatie
-  <button title="Menu" aria-label="Menu openen" class="menu-btn" onclick="toggleMenu()">
-    <span class="menu-icon"><span></span><span></span><span></span></span>
-  </button>
-</header>
-<nav id="menu-panel" class="menu-panel" aria-label="menu">
-  <button class="closebtn" aria-label="Sluiten" onclick="closeMenu()">&times;</button>
-  <ul>
-    <li><button onclick="navMenu('start')"><strong>🔄 Reset (start opnieuw)</strong></button></li>
-    <li><button onclick="navMenu('inventarisatie')">📝 Tellen</button></li>
-    <li><button onclick="navMenu('overzicht')">📊 Overzicht</button></li>
-  </ul>
-</nav>
-
-<div class="container">
-
-  <div id="start-paneel" class="panel hide">
-    <label for="klantnaam">Klantnaam:</label>
-    <input type="text" id="klantnaam" placeholder="Bedrijfsnaam of klant..." />
-    <label for="kistnums">Kistnummer(s):</label>
-    <input type="text" id="kistnums" placeholder="101, 102 of 101 102..." />
-    <small style="color:#444;display:block; margin-bottom:12px;">Meerdere nummers gescheiden door komma of spatie</small>
-    <label for="kistcount">Hoeveel kisten tellen?</label>
-    <input type="number" id="kistcount" min="1" value="1" />
-    <button class="start-btn" onclick="startInventarisatie()">🚀 Start telling</button>
-    <hr />
-    <button onclick="document.getElementById('importfile').click()">📁 Herstel van bestand</button>
-    <input type="file" id="importfile" style="display:none" accept=".json" />
-    <small style="color:#444; display:block; margin-top:6px;">Zoek een bestand als: <b>Fitterskist YYMMDD.json</b></small>
-  </div>
-
-  <div id="inventarisatie-paneel" class="panel hide">
-    <div><b>Klant:</b> <span id="klantnaam-out"></span> | <b>Kist(en):</b> <span id="kistnums-out"></span> | <b>Aantal:</b> <span id="aantal-kisten"></span></div>
-    <div id="art-list" class="art-list"></div>
-    <button onclick="openPaneel('start')">⬅️ Terug</button>
-  </div>
-
-  <div id="overzicht-paneel" class="panel hide">
-    <div><b>Klant:</b> <span id="klantnaam-ovz"></span> | <b>Kist(en):</b> <span id="kistnums-ovz"></span></div>
-    <div class="overzicht-buttons">
-      <button onclick="maakVermissingslijst()">📋 Maak vermissingslijst</button>
-      <button onclick="downloadCSV()" id="csv-btn" style="display:none;">📄 Download CSV</button>
-      <button onclick="emailLeverancier()" id="lev-btn" style="display:none;">📧 Mail leverancier</button>
-      <button onclick="emailKlant()" id="klant-btn" style="display:none;">💼 Mail klant</button>
-      <button onclick="printLijst()" id="print-btn" style="display:none;">🖨️ Print</button>
+  <!-- Wachtwoordscherm -->
+  <div id="pwlock">
+    <div id="pwbox" role="dialog" aria-modal="true">
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 500 210">
+        <rect x="50" y="75" width="400" height="110" rx="26" fill="#383c43" stroke="#222" stroke-width="5"/>
+        <rect x="70" y="44" width="360" height="48" rx="14" fill="#24282e" stroke="#191a1c" stroke-width="2.8"/>
+        <rect x="70" y="119" width="50" height="28" rx="9" fill="#e7bb41" stroke="#b89d2f" stroke-width="3.5"/>
+        <rect x="380" y="119" width="50" height="28" rx="9" fill="#e7bb41" stroke="#b89d2f" stroke-width="3.5"/>
+        <ellipse cx="250" cy="200" rx="185" ry="14.5" fill="#23515155"/>
+        <rect x="70" y="89" width="360" height="7.7" fill="#bfc9d1"/>
+        <rect x="204" y="122" width="92" height="37" rx="8" fill="#e7bb41"/>
+        <text x="250" y="149" font-size="32" fill="#2b2b1a" font-family="Arial" text-anchor="middle" font-weight="bold" letter-spacing="4.6">STANLEY</text>
+      </svg>
+      <label for="pwinput">Voer wachtwoord in</label>
+      <input type="password" id="pwinput" placeholder="Wachtwoord" autocomplete="off" />
+      <button type="button" onclick="checkpw()">Login</button>
+      <div id="pwerror" role="alert" aria-live="assertive">Fout wachtwoord</div>
     </div>
-    <div id="vermissingslijst-sectie" style="display:none;">
-      <h3>🛒 Vermissingslijst</h3>
-      <div id="status-info" class="status-info"></div>
-      <div id="lijst-tabel"></div>
-    </div>
-    <button onclick="openPaneel('start')" style="margin-top:10px;">⬅️ Terug</button>
   </div>
-</div>
 
-<div id="flashmsg"></div>
-<script>
-// DATA & INIT
-const artikelen = [
-  {leverancier_nr:"2486607",ons_nr:"11675001",naam:"Gereedschapkist Fatmax",prijs:54.84,img:"🧰"},
-  {leverancier_nr:"4130507",ons_nr:"11675002",naam:"M-LOY Hangslot 40MM",prijs:8.16,img:"🔐"},
-  {leverancier_nr:"2399308",ons_nr:"11675003",naam:"Metaal beugelzaag 300mm",prijs:18.91,img:"🪚"},
-  {leverancier_nr:"2399306",ons_nr:"11675004",naam:"Zaagblad metaal 300mm",prijs:1.61,img:"⚙️"},
-  {leverancier_nr:"2117581",ons_nr:"11675005",naam:"1716P schraper",prijs:14.18,img:"🔪"},
-  {leverancier_nr:"6692052",ons_nr:"11675006",naam:"Sleufplaatbeitel",prijs:14.31,img:"🪛"},
-  {leverancier_nr:"11807240",ons_nr:"11675007",naam:"Gasfles sleutel",prijs:9.26,img:"🗝️"},
-  {leverancier_nr:"2477111",ons_nr:"11675008",naam:"Centerpons 120mm",prijs:2.79,img:"📍"},
-  {leverancier_nr:"2477107",ons_nr:"11675009",naam:"Koudbeitel 200mm",prijs:6.91,img:"📌"},
-  {leverancier_nr:"4696786",ons_nr:"11675010",naam:"Kraspen Elzet",prijs:4.77,img:"🖋️"},
-  {leverancier_nr:"2448116",ons_nr:"11675011",naam:"Pijptang 310mm",prijs:20.53,img:"⭕"},
-  {leverancier_nr:"2396764",ons_nr:"11675012",naam:"Moersleutel zwart 300mm",prijs:19.41,img:"🔩"},
-  {leverancier_nr:"3046217",ons_nr:"11675013",naam:"Metaalvijl rond 250mm",prijs:4.13,img:"🗡️"},
-  {leverancier_nr:"3046216",ons_nr:"11675014",naam:"Metaalvijl halfrond 250mm",prijs:4.95,img:"🗡️"},
-  {leverancier_nr:"10021954",ons_nr:"11675015",naam:"Waterpomp tang 250mm",prijs:14.04,img:"💧"},
-  {leverancier_nr:"2300751",ons_nr:"11675016",naam:"Ring-steeksleutel 10mm",prijs:2.81,img:"🔧"},
-  {leverancier_nr:"2300746",ons_nr:"11675017",naam:"Ring-steeksleutel 13mm",prijs:3.33,img:"🔧"},
-  {leverancier_nr:"2300747",ons_nr:"11675018",naam:"Ring-steeksleutel 17mm",prijs:4.43,img:"🔧"},
-  {leverancier_nr:"2300745",ons_nr:"11675019",naam:"Ring-steeksleutel 19mm",prijs:5.00,img:"🔧"},
-  {leverancier_nr:"2300737",ons_nr:"11675020",naam:"Ring-steeksleutel 22mm",prijs:6.60,img:"🔧"},
-  {leverancier_nr:"2300738",ons_nr:"11675021",naam:"Ring-steeksleutel 24mm",prijs:7.54,img:"🔧"},
-  {leverancier_nr:"2300735",ons_nr:"11675022",naam:"Ring-steeksleutel 27mm",prijs:9.89,img:"🔧"},
-  {leverancier_nr:"2300740",ons_nr:"11675023",naam:"Ring-steeksleutel 30mm",prijs:11.55,img:"🔧"},
-  {leverancier_nr:"2300739",ons_nr:"11675024",naam:"Ring-steeksleutel 32mm",prijs:13.41,img:"🔧"},
-  {leverancier_nr:"2477115",ons_nr:"11675025",naam:"Breekijzer 400mm",prijs:12.95,img:"⚒️"},
-  {leverancier_nr:"188715",ons_nr:"11675026",naam:"Wig 2,0 KG",prijs:22.24,img:"🔺"},
-  {leverancier_nr:"5448459",ons_nr:"11675027",naam:"Rolbandmaat 5m",prijs:4.23,img:"🚰"},
-  {leverancier_nr:"2447236",ons_nr:"11675028",naam:"Aluminium waterpas 400mm",prijs:18.75,img:"📏"},
-  {leverancier_nr:"666901",ons_nr:"11675029",naam:"Plaatwinkelhaak 300mm",prijs:14.63,img:"📐"},
-  {leverancier_nr:"2269601",ons_nr:"11675030",naam:"bankhamer 1000gram",prijs:18.38,img:"🔨"},
-  {leverancier_nr:"7425836",ons_nr:"11675031",naam:"Bankhamer 2000gram",prijs:30.93,img:"🔨"},
-  {leverancier_nr:"5812679",ons_nr:"11675032",naam:"Vuisthamer 1500gram",prijs:18.86,img:"🔨"},
-  {leverancier_nr:"593999",ons_nr:"11675033",naam:"schroevendraaier softfinish",prijs:18.46,img:"🪛"},
-  {leverancier_nr:"850077",ons_nr:"11675034",naam:"Staalborstel 3 rij",prijs:2.45,img:"🚿"}
-].map(a=>({...a,standaard:1}));
-let aantallen = [];
-let huidigeVermissingen = [];
-const PW = "1808";
+  <header>
+    Gereedschapskist Inventarisatie
+    <button title="Menu" aria-label="Menu openen" class="menu-btn" onclick="toggleMenu()">
+      <span class="menu-icon"><span></span><span></span><span></span></span>
+    </button>
+  </header>
+  <nav id="menu-panel" class="menu-panel" aria-label="menu">
+    <button class="closebtn" aria-label="Sluiten" onclick="closeMenu()">&times;</button>
+    <ul>
+      <li><button onclick="navMenu('start')"><strong>🔄 Reset (start opnieuw)</strong></button></li>
+      <li><button onclick="navMenu('inventarisatie')">📝 Tellen</button></li>
+      <li><button onclick="navMenu('overzicht')">📊 Overzicht</button></li>
+    </ul>
+  </nav>
 
-/* --- LOGIN EN PANEL FLOW --- */
-function checkpw() {
-  var val = document.getElementById('pwinput').value.trim();
-  if (val === PW) {
-    localStorage.setItem('authed', '1');
-    document.getElementById('pwlock').style.display = 'none';
-    openPaneel('start');
-  } else {
-    var err = document.getElementById('pwerror');
-    err.style.display = 'block';
-    setTimeout(() => err.style.display = 'none', 1700);
-    document.getElementById('pwinput').value = '';
-    document.getElementById('pwinput').focus();
-  }
-}
-document.getElementById('pwinput').addEventListener('keydown', function(e){
-  if (e.key === 'Enter') checkpw();
-});
-window.addEventListener('DOMContentLoaded', function(){
-  if (localStorage.getItem('authed') === '1') {
-    document.getElementById('pwlock').style.display = 'none';
-    openPaneel(localStorage.getItem('lastpaneel')||'start');
-  } else {
-    document.getElementById('pwlock').style.display = 'flex';
-    document.getElementById('pwinput').focus();
-  }
-});
-function openPaneel(paneel){
-  document.querySelectorAll('.panel').forEach(el => el.classList.add('hide'));
-  document.getElementById(paneel+'-paneel').classList.remove('hide');
-  localStorage.setItem('lastpaneel', paneel);
-  if(paneel==='inventarisatie'){ buildArtikellijst(); updateKlantBalk(); }
-  if(paneel==='overzicht'){ updateKlantBalk(); }
-  if(paneel==='start'){ loadStartData(); }
-}
-function navMenu(paneel){
-  closeMenu();
-  if(paneel==='start') resetAlles();
-  else openPaneel(paneel);
-}
+  <div class="container">
 
-/* --- RESET --- */
-function resetAlles() {
-  Object.keys(localStorage).forEach(k=>{
-    if(k!=='authed') localStorage.removeItem(k)
-  });
-  openPaneel('start');
-  document.getElementById('klantnaam').value = '';
-  document.getElementById('kistnums').value = '';
-  document.getElementById('kistcount').value = '1';
-}
+    <!-- Beginpaneel: klant/kist/hoeveelheid invullen -->
+    <div id="start-paneel" class="panel hide">
+      <label for="klantnaam">Klantnaam:</label>
+      <input type="text" id="klantnaam" placeholder="Bedrijfsnaam of klant..." />
+      <label for="kistnums">Kistnummer(s):</label>
+      <input type="text" id="kistnums" placeholder="101, 102 of 101 102..." />
+      <small style="color:#444;display:block; margin-bottom:12px;">Meerdere nummers gescheiden door komma of spatie</small>
+      <label for="kistcount">Hoeveel kisten tellen?</label>
+      <input type="number" id="kistcount" min="1" value="1" />
+      <button class="start-btn" onclick="startInventarisatie()">🚀 Start telling</button>
+      <hr />
+      <button onclick="document.getElementById('importfile').click()">📁 Herstel van bestand</button>
+      <input type="file" id="importfile" style="display:none" accept=".json" />
+      <small style="color:#444; display:block; margin-top:6px;">Zoek een bestand als: <b>Fitterskist YYMMDD.json</b></small>
+    </div>
 
-/* --- HAMBURGER (auto close buiten klik of keuze) --- */
-function toggleMenu() {
-  const menu = document.getElementById('menu-panel');
-  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-}
-function closeMenu() {
-  document.getElementById('menu-panel').style.display = 'none';
-}
-window.addEventListener('mouseup', function(e){
-  const menu=document.getElementById('menu-panel');
-  const btn=document.querySelector('.menu-btn');
-  if(menu.style.display==='block' && !menu.contains(e.target) && !btn.contains(e.target)) closeMenu();
-});
+    <!-- Telscherm -->
+    <div id="inventarisatie-paneel" class="panel hide">
+      <div><b>Klant:</b> <span id="klantnaam-out"></span> | <b>Kist(en):</b> <span id="kistnums-out"></span> | <b>Aantal:</b> <span id="aantal-kisten"></span></div>
+      <div id="art-list" class="art-list"></div>
+      <button onclick="openPaneel('start')">⬅️ Terug</button>
+    </div>
 
-/* --- DATA STARTFORMATIE --- */
-function startInventarisatie(){
-  localStorage.setItem('klantnaam', document.getElementById('klantnaam').value||'');
-  localStorage.setItem('kistnums', document.getElementById('kistnums').value||'');
-  localStorage.setItem('kistcount', document.getElementById('kistcount').value||'1');
-  aantallen = artikelen.map(()=>0);
-  localStorage.setItem('aantallen', JSON.stringify(aantallen));
-  openPaneel('inventarisatie');
-}
-function buildArtikellijst(){
-  const kl = document.getElementById('art-list');
-  kl.innerHTML = '';
-  aantallen = JSON.parse(localStorage.getItem('aantallen')||'[]');
-  if(aantallen.length!==artikelen.length) aantallen = artikelen.map(()=>0);
-  artikelen.forEach((art, i) => {
-    const moet = art.standaard*(parseInt(localStorage.getItem('kistcount'))||1);
-    const huidigAantal = aantallen[i]||0;
-    const el = document.createElement('div');
-    el.className = 'art-card';
-    el.innerHTML = `
-      <div class="art-info">
-        <h4>${art.naam}</h4>
-        <div class="details">Art. nr: ${art.ons_nr}<br>Per kist: ${art.standaard} | Totaal: ${moet}</div>
+    <!-- Overzichtscherm -->
+    <div id="overzicht-paneel" class="panel hide">
+      <div><b>Klant:</b> <span id="klantnaam-ovz"></span> | <b>Kist(en):</b> <span id="kistnums-ovz"></span></div>
+      <div class="overzicht-buttons">
+        <button onclick="maakVermissingslijst()">📋 Maak vermissingslijst</button>
+        <button onclick="downloadCSV()" id="csv-btn" style="display:none;">📄 Download CSV</button>
+        <button onclick="emailLeverancier()" id="lev-btn" style="display:none;">📧 Mail leverancier</button>
+        <button onclick="emailKlant()" id="klant-btn" style="display:none;">💼 Mail klant</button>
+        <button onclick="printLijst()" id="print-btn" style="display:none;">🖨️ Print</button>
       </div>
-      <div class="art-actions">
-        <button onclick="veranderAantal(${i},-1)">-</button>
-        <input type="number" min="0" value="${huidigAantal}" id="a${i}" onchange="updateAantal(${i},this)">
-        <button onclick="veranderAantal(${i},1)">+</button>
+      <div id="vermissingslijst-sectie" style="display:none;">
+        <h3>🛒 Vermissingslijst</h3>
+        <div id="status-info" class="status-info"></div>
+        <div id="lijst-tabel"></div>
       </div>
-      <div class="art-img">${art.img}</div>
-      `;
-    kl.appendChild(el);
-  });
-}
-function veranderAantal(i,d){
-  aantallen[i]=Math.max(0,(aantallen[i]||0)+d);
-  document.getElementById('a'+i).value = aantallen[i];
-  localStorage.setItem('aantallen', JSON.stringify(aantallen));
-  flashOpgeslagen();
-}
-function updateAantal(i,el){
-  aantallen[i]=Math.max(0,parseInt(el.value)||0);
-  localStorage.setItem('aantallen', JSON.stringify(aantallen));
-  flashOpgeslagen();
-}
-function updateKlantBalk(){
-  const k=localStorage.getItem('klantnaam')||'';
-  const n=localStorage.getItem('kistnums')||'';
-  const kc=localStorage.getItem('kistcount')||'';
-  ['klantnaam-out','klantnaam-ovz'].forEach(id=>{let el=document.getElementById(id); if(el) el.textContent=k;});
-  ['kistnums-out','kistnums-ovz'].forEach(id=>{let el=document.getElementById(id); if(el) el.textContent=n;});
-  document.getElementById('aantal-kisten')&&(document.getElementById('aantal-kisten').textContent=kc);
-}
-function loadStartData(){
-  document.getElementById('klantnaam').value = localStorage.getItem('klantnaam')||'';
-  document.getElementById('kistnums').value = localStorage.getItem('kistnums')||'';
-  document.getElementById('kistcount').value = localStorage.getItem('kistcount')||'1';
-}
-/* --- GROENE OPSLAAN BALK --- */
-function flashOpgeslagen(){
-  const f=document.getElementById('flashmsg');
-  f.textContent = "Opgeslagen!";
-  f.style.display="block"; f.style.opacity=1;
-  setTimeout(()=>{f.style.opacity=0;setTimeout(()=>f.style.display="none",500)},1300);
-}
+      <button onclick="openPaneel('start')" style="margin-top:10px;">⬅️ Terug</button>
+    </div>
+  </div>
 
-/* --- VERMISSINGEN & EXPORT --- */
-function maakVermissingslijst(){
-  const kisten = parseInt(localStorage.getItem('kistcount')) || 1;
-  aantallen = JSON.parse(localStorage.getItem('aantallen')||'[]');
-  huidigeVermissingen = artikelen
-    .map((art,i)=>{
-      const moet = art.standaard*kisten;
-      const heb = aantallen[i]||0;
-      const mist = Math.max(moet-heb,0);
-      return {...art, moet, heb, mist, subtotaal: mist*art.prijs};
-    })
-    .filter(i=>i.mist>0);
-  let totaal = huidigeVermissingen.reduce((t,i)=>t+i.subtotaal,0);
-  let html =
-    `<table><thead><tr>
-    <th>Omschrijving</th>
-    <th>Ons nr</th>
-    <th class="mistcell">Mist</th>
-    <th>Moet</th>
-    <th>Heb</th>
-    <th>Prijs/stuk</th>
-    <th>Subtotaal</th>
-    <th>Lev.nr</th>
-    </tr></thead><tbody>`;
-  huidigeVermissingen.forEach(m => {
-    html += `<tr>
-      <td>${m.naam}</td>
-      <td>${m.ons_nr}</td>
-      <td class="mistcell">${m.mist}</td>
-      <td>${m.moet}</td>
-      <td>${m.heb}</td>
-      <td>€${m.prijs.toFixed(2)}</td>
-      <td>€${m.subtotaal.toFixed(2)}</td>
-      <td>${m.leverancier_nr}</td>
-    </tr>`;
-  });
-  html += `</tbody>
-    <tfoot><tr><td colspan="6"><strong>TOTAAL</strong></td><td><strong>€${totaal.toFixed(2)}</strong></td><td></td></tr></tfoot>
-    </table>`;
-  document.getElementById('lijst-tabel').innerHTML = html;
-  document.getElementById('status-info').textContent =
-    `${huidigeVermissingen.length} artikelen missen | Totale waarde: €${totaal.toFixed(2)}`;
-  document.getElementById('vermissingslijst-sectie').style.display = 'block';
-  ["csv-btn","lev-btn","klant-btn","print-btn"].forEach(id => document.getElementById(id).style.display = 'inline-block');
-}
-function downloadCSV(){
-  let csv = "Klantnaam,Kistnummer(s),Omschrijving,Ons_nr,Mist,Moet,Heb,Prijs_per_stuk,Subtotaal,Leverancier_nr\r\n";
-  huidigeVermissingen.forEach(m => {
-    csv += `"${localStorage.getItem('klantnaam')||''}","${localStorage.getItem('kistnums')||''}","${m.naam}",${m.ons_nr},${m.mist},${m.moet},${m.heb},${m.prijs.toFixed(2)},${m.subtotaal.toFixed(2)},${m.leverancier_nr}\r\n`;
-  });
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = "vermissingslijst.csv"; a.click(); a.remove();
-}
-function emailLeverancier() {
-  let tekst = "Onderwerp: Bestelling gereedschap\n\nBeste leverancier,\n\nHierbij onze bestelling:\n\n";
-  huidigeVermissingen.forEach(m => { tekst += `${m.leverancier_nr} - ${m.naam} - ${m.mist} stuks\n`; });
-  tekst += "\nMet vriendelijke groet,\nEQUIP Rental & Services";
-  window.prompt("Kopieer deze tekst voor email aan leverancier:",tekst);
-}
-function emailKlant() {
-  let tekst = `Onderwerp: Vermissing gereedschapskist\n\nBeste ${localStorage.getItem('klantnaam')||''},\n\nBij controle van gereedschapskist ${localStorage.getItem('kistnums')||''} zijn de volgende artikelen vermist:\n\n`;
-  let totaal = 0;
-  huidigeVermissingen.forEach(m => {
-    tekst += `${m.ons_nr} - ${m.naam} - ${m.mist} stuks - €${m.prijs.toFixed(2)} = €${m.subtotaal.toFixed(2)}\n`;
-    totaal += m.subtotaal;
-  });
-  tekst += `\nTOTAAL: €${totaal.toFixed(2)}\n\nDeze kosten worden in rekening gebracht.\n\nMet vriendelijke groet,\nEQUIP Rental & Services`;
-  window.prompt("Kopieer deze tekst voor email aan klant:",tekst);
-}
-function printLijst(){ window.print(); }
-document.getElementById('importfile').addEventListener('change', function(e) {/* ...uitbreidbaar... */});
-</script>
+  <div id="flashmsg"></div>
+  <script>
+    const artikelen = [
+      {leverancier_nr:"2486607",ons_nr:"11675001",naam:"Gereedschapkist Fatmax",prijs:54.84,img:"🧰"},
+      {leverancier_nr:"4130507",ons_nr:"11675002",naam:"M-LOY Hangslot 40MM",prijs:8.16,img:"🔐"},
+      {leverancier_nr:"2399308",ons_nr:"11675003",naam:"Metaal beugelzaag 300mm",prijs:18.91,img:"🪚"},
+      {leverancier_nr:"2399306",ons_nr:"11675004",naam:"Zaagblad metaal 300mm",prijs:1.61,img:"⚙️"},
+      {leverancier_nr:"2117581",ons_nr:"11675005",naam:"1716P schraper",prijs:14.18,img:"🔪"},
+      {leverancier_nr:"6692052",ons_nr:"11675006",naam:"Sleufplaatbeitel",prijs:14.31,img:"🪛"},
+      {leverancier_nr:"11807240",ons_nr:"11675007",naam:"Gasfles sleutel",prijs:9.26,img:"🗝️"},
+      {leverancier_nr:"2477111",ons_nr:"11675008",naam:"Centerpons 120mm",prijs:2.79,img:"📍"},
+      {leverancier_nr:"2477107",ons_nr:"11675009",naam:"Koudbeitel 200mm",prijs:6.91,img:"📌"},
+      {leverancier_nr:"4696786",ons_nr:"11675010",naam:"Kraspen Elzet",prijs:4.77,img:"🖋️"},
+      {leverancier_nr:"2448116",ons_nr:"11675011",naam:"Pijptang 310mm",prijs:20.53,img:"⭕"},
+      {leverancier_nr:"2396764",ons_nr:"11675012",naam:"Moersleutel zwart 300mm",prijs:19.41,img:"🔩"},
+      {leverancier_nr:"3046217",ons_nr:"11675013",naam:"Metaalvijl rond 250mm",prijs:4.13,img:"🗡️"},
+      {leverancier_nr:"3046216",ons_nr:"11675014",naam:"Metaalvijl halfrond 250mm",prijs:4.95,img:"🗡️"},
+      {leverancier_nr:"10021954",ons_nr:"11675015",naam:"Waterpomp tang 250mm",prijs:14.04,img:"💧"},
+      {leverancier_nr:"2300751",ons_nr:"11675016",naam:"Ring-steeksleutel 10mm",prijs:2.81,img:"🔧"},
+      {leverancier_nr:"2300746",ons_nr:"11675017",naam:"Ring-steeksleutel 13mm",prijs:3.33,img:"🔧"},
+      {leverancier_nr:"2300747",ons_nr:"11675018",naam:"Ring-steeksleutel 17mm",prijs:4.43,img:"🔧"},
+      {leverancier_nr:"2300745",ons_nr:"11675019",naam:"Ring-steeksleutel 19mm",prijs:5.00,img:"🔧"},
+      {leverancier_nr:"2300737",ons_nr:"11675020",naam:"Ring-steeksleutel 22mm",prijs:6.60,img:"🔧"},
+      {leverancier_nr:"2300738",ons_nr:"11675021",naam:"Ring-steeksleutel 24mm",prijs:7.54,img:"🔧"},
+      {leverancier_nr:"2300735",ons_nr:"11675022",naam:"Ring-steeksleutel 27mm",prijs:9.89,img:"🔧"},
+      {leverancier_nr:"2300740",ons_nr:"11675023",naam:"Ring-steeksleutel 30mm",prijs:11.55,img:"🔧"},
+      {leverancier_nr:"2300739",ons_nr:"11675024",naam:"Ring-steeksleutel 32mm",prijs:13.41,img:"🔧"},
+      {leverancier_nr:"2477115",ons_nr:"11675025",naam:"Breekijzer 400mm",prijs:12.95,img:"⚒️"},
+      {leverancier_nr:"188715",ons_nr:"11675026",naam:"Wig 2,0 KG",prijs:22.24,img:"🔺"},
+      {leverancier_nr:"5448459",ons_nr:"11675027",naam:"Rolbandmaat 5m",prijs:4.23,img:"🚰"},
+      {leverancier_nr:"2447236",ons_nr:"11675028",naam:"Aluminium waterpas 400mm",prijs:18.75,img:"📏"},
+      {leverancier_nr:"666901",ons_nr:"11675029",naam:"Plaatwinkelhaak 300mm",prijs:14.63,img:"📐"},
+      {leverancier_nr:"2269601",ons_nr:"11675030",naam:"bankhamer 1000gram",prijs:18.38,img:"🔨"},
+      {leverancier_nr:"7425836",ons_nr:"11675031",naam:"Bankhamer 2000gram",prijs:30.93,img:"🔨"},
+      {leverancier_nr:"5812679",ons_nr:"11675032",naam:"Vuisthamer 1500gram",prijs:18.86,img:"🔨"},
+      {leverancier_nr:"593999",ons_nr:"11675033",naam:"schroevendraaier softfinish",prijs:18.46,img:"🪛"},
+      {leverancier_nr:"850077",ons_nr:"11675034",naam:"Staalborstel 3 rij",prijs:2.45,img:"🚿"}
+    ].map(a=>({...a,standaard:1}));
+    let aantallen = [];
+    let huidigeVermissingen = [];
+    
+    function flash(msg) {
+      const flashEl = document.getElementById('flashmsg');
+      flashEl.textContent = msg;
+      flashEl.style.display = 'block';
+      flashEl.style.opacity = 1;
+      setTimeout(() => {
+        flashEl.style.opacity = 0;
+        setTimeout(() => { flashEl.style.display = 'none'; }, 600);
+      }, 1500);
+    }
+    
+    function checkpw() {
+      var val = document.getElementById('pwinput').value.trim();
+      if (val === "1808") {
+        localStorage.setItem('authed', '1');
+        document.getElementById('pwlock').style.display = 'none';
+        openPaneel('start');
+      } else {
+        var err = document.getElementById('pwerror');
+        err.style.display = 'block';
+        setTimeout(() => err.style.display = 'none', 1700);
+        document.getElementById('pwinput').value = '';
+        document.getElementById('pwinput').focus();
+      }
+    }
+    
+    document.getElementById('pwinput').addEventListener('keydown', function(e){
+      if(e.key === 'Enter') checkpw();
+    });
+    window.addEventListener('DOMContentLoaded', function(){
+      if(localStorage.getItem('authed') === '1') {
+        document.getElementById('pwlock').style.display = 'none';
+        openPaneel(localStorage.getItem('lastpaneel')||'start');
+      } else {
+        document.getElementById('pwlock').style.display = 'flex';
+        document.getElementById('pwinput').focus();
+      }
+    });
+    
+    function openPaneel(paneel){
+      document.querySelectorAll('.panel').forEach(el => el.classList.add('hide'));
+      document.getElementById(paneel+'-paneel').classList.remove('hide');
+      localStorage.setItem('lastpaneel', paneel);
+      if(paneel === 'inventarisatie'){
+        buildArtikellijst();
+        updateKlantBalk();
+      }
+      if(paneel === 'overzicht'){
+        updateKlantBalk();
+      }
+      if(paneel === 'start'){
+        loadStartData();
+      }
+      closeMenu();
+    }
+    
+    function navMenu(paneel){
+      if(paneel === 'start') resetAlles();
+      else openPaneel(paneel);
+      closeMenu();
+    }
+    
+    function resetAlles() {
+      Object.keys(localStorage).forEach(key => {
+        if(key !== 'authed') localStorage.removeItem(key);
+      });
+      document.getElementById('klantnaam').value = '';
+      document.getElementById('kistnums').value = '';
+      document.getElementById('kistcount').value = '1';
+      openPaneel('start');
+    }
+    
+    function toggleMenu() {
+      const menu = document.getElementById('menu-panel');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+    function closeMenu() {
+      document.getElementById('menu-panel').style.display = 'none';
+    }
+    window.addEventListener('mouseup', function(e) {
+      const menu = document.getElementById('menu-panel');
+      const btn = document.querySelector('.menu-btn');
+      if(menu.style.display === 'block' && !menu.contains(e.target) && !btn.contains(e.target)) closeMenu();
+    });
+    
+    function startInventarisatie(){
+      localStorage.setItem('klantnaam', document.getElementById('klantnaam').value || '');
+      localStorage.setItem('kistnums', document.getElementById('kistnums').value || '');
+      localStorage.setItem('kistcount', document.getElementById('kistcount').value || '1');
+      aantallen = artikelen.map(() => 0);
+      localStorage.setItem('aantallen', JSON.stringify(aantallen));
+      openPaneel('inventarisatie');
+      flash('Opgeslagen!');
+    }
+    
+    function buildArtikellijst(){
+      const kl = document.getElementById('art-list');
+      kl.innerHTML = '';
+      aantallen = JSON.parse(localStorage.getItem('aantallen') || '[]');
+      if(aantallen.length !== artikelen.length) aantallen = artikelen.map(() => 0);
+      artikelen.forEach((art, i) => {
+        const moet = art.standaard * (parseInt(localStorage.getItem('kistcount')) || 1);
+        const huidigAantal = aantallen[i] || 0;
+        const el = document.createElement('div');
+        el.className = 'art-card';
+        el.innerHTML = `
+          <div class="art-info">
+            <h4>${art.naam}</h4>
+            <div class="details">Art. nr: ${art.ons_nr}<br>Per kist: ${art.standaard} | Totaal: ${moet}</div>
+          </div>
+          <div class="art-actions">
+            <button onclick="veranderAantal(${i}, -1)">-</button>
+            <input type="number" min="0" value="${huidigAantal}" id="a${i}" onchange="updateAantal(${i}, this)">
+            <button onclick="veranderAantal(${i}, 1)">+</button>
+          </div>
+          <div class="art-img">${art.img}</div>
+        `;
+        kl.appendChild(el);
+      });
+    }
+    
+    function veranderAantal(i, d){
+      aantallen[i] = Math.max(0, (aantallen[i] || 0) + d);
+      document.getElementById('a' + i).value = aantallen[i];
+      localStorage.setItem('aantallen', JSON.stringify(aantallen));
+      flash('Opgeslagen!');
+    }
+    
+    function updateAantal(i, el){
+      aantallen[i] = Math.max(0, parseInt(el.value) || 0);
+      localStorage.setItem('aantallen', JSON.stringify(aantallen));
+      flash('Opgeslagen!');
+    }
+    
+    function updateKlantBalk(){
+      const k = localStorage.getItem('klantnaam') || '';
+      const n = localStorage.getItem('kistnums') || '';
+      const kc = localStorage.getItem('kistcount') || '';
+      ['klantnaam-out', 'klantnaam-ovz'].forEach(id => { let el = document.getElementById(id); if(el) el.textContent = k; });
+      ['kistnums-out', 'kistnums-ovz'].forEach(id => { let el = document.getElementById(id); if(el) el.textContent = n; });
+      document.getElementById('aantal-kisten') && (document.getElementById('aantal-kisten').textContent = kc);
+    }
+    
+    function loadStartData(){
+      document.getElementById('klantnaam').value = localStorage.getItem('klantnaam') || '';
+      document.getElementById('kistnums').value = localStorage.getItem('kistnums') || '';
+      document.getElementById('kistcount').value = localStorage.getItem('kistcount') || '1';
+    }
+    
+    function maakVermissingslijst(){
+      const kisten = parseInt(localStorage.getItem('kistcount')) || 1;
+      aantallen = JSON.parse(localStorage.getItem('aantallen') || '[]');
+      huidigeVermissingen = artikelen
+        .map((art, i) => {
+          const moet = art.standaard * kisten;
+          const heb = aantallen[i] || 0;
+          const mist = Math.max(moet - heb, 0);
+          return {...art, moet, heb, mist, subtotaal: mist * art.prijs};
+        })
+        .filter(i => i.mist > 0);
+      let totaal = huidigeVermissingen.reduce((t, i) => t + i.subtotaal, 0);
+      let html =
+        `<table><thead><tr>
+        <th>Omschrijving</th>
+        <th>Ons nr</th>
+        <th class="mistcell">Mist</th>
+        <th>Moet</th>
+        <th>Heb</th>
+        <th>Prijs/stuk</th>
+        <th>Subtotaal</th>
+        <th>Lev.nr</th>
+        </tr></thead><tbody>`;
+      huidigeVermissingen.forEach(m => {
+        html += `<tr>
+          <td>${m.naam}</td>
+          <td>${m.ons_nr}</td>
+          <td class="mistcell">${m.mist}</td>
+          <td>${m.moet}</td>
+          <td>${m.heb}</td>
+          <td>€${m.prijs.toFixed(2)}</td>
+          <td>€${m.subtotaal.toFixed(2)}</td>
+          <td>${m.leverancier_nr}</td>
+        </tr>`;
+      });
+      html += `</tbody>
+        <tfoot><tr><td colspan="6"><strong>TOTAAL</strong></td><td><strong>€${totaal.toFixed(2)}</strong></td><td></td></tr></tfoot>
+        </table>`;
+      document.getElementById('lijst-tabel').innerHTML = html;
+      document.getElementById('status-info').textContent =
+        `${huidigeVermissingen.length} artikelen missen | Totale waarde: €${totaal.toFixed(2)}`;
+      document.getElementById('vermissingslijst-sectie').style.display = 'block';
+      ['csv-btn', 'lev-btn', 'klant-btn', 'print-btn'].forEach(id => document.getElementById(id).style.display = 'inline-block');
+    }
+    
+    function downloadCSV(){
+      let csv = "Klantnaam,Kistnummer(s),Omschrijving,Ons_nr,Mist,Moet,Heb,Prijs_per_stuk,Subtotaal,Leverancier_nr\r\n";
+      huidigeVermissingen.forEach(m => {
+        csv += `"${localStorage.getItem('klantnaam')||''}","${localStorage.getItem('kistnums')||''}","${m.naam}",${m.ons_nr},${m.mist},${m.moet},${m.heb},${m.prijs.toFixed(2)},${m.subtotaal.toFixed(2)},${m.leverancier_nr}\r\n`;
+      });
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = "vermissingslijst.csv"; a.click(); a.remove();
+    }
+    
+    function emailLeverancier() {
+      let tekst = "Onderwerp: Bestelling gereedschap\n\nBeste leverancier,\n\nHierbij onze bestelling:\n\n";
+      huidigeVermissingen.forEach(m => { tekst += `${m.leverancier_nr} - ${m.naam} - ${m.mist} stuks\n`; });
+      tekst += "\nMet vriendelijke groet,\nEQUIP Rental & Services";
+      showPopupEmail("E-mail leverancier", tekst);
+    }
+    
+    function emailKlant() {
+      let tekst = `Onderwerp: Vermissing gereedschapskist\n\nBeste ${localStorage.getItem('klantnaam')||''},\n\nBij controle van gereedschapskist ${localStorage.getItem('kistnums')||''} zijn de volgende artikelen vermist:\n\n`;
+      let totaal = 0;
+      huidigeVermissingen.forEach(m => {
+        tekst += `${m.ons_nr} - ${m.naam} - ${m.mist} stuks - €${m.prijs.toFixed(2)} = €${m.subtotaal.toFixed(2)}\n`;
+        totaal += m.subtotaal;
+      });
+      tekst += `\nTOTAAL: €${totaal.toFixed(2)}\n\nDeze kosten worden in rekening gebracht.\n\nMet vriendelijke groet,\nEQUIP Rental & Services`;
+      showPopupEmail("E-mail klant", tekst);
+    }
+    function printLijst(){ window.print(); }
+    
+    function showPopupEmail(title, text) {
+      let el = document.getElementById('emailpopup');
+      if(el) el.remove();
+      let div = document.createElement('div');
+      div.id = 'emailpopup';
+      div.style = "position:fixed;z-index:6000;left:0;top:0;width:100vw;height:100vh;background:rgba(60,138,143,0.85);display:flex;align-items:center;justify-content:center;";
+      div.innerHTML = `<div style="background:#fff;padding:22px 19px 16px 19px;border-radius:11px;max-width:98vw;width:370px;box-shadow:0 4px 28px #0005">
+        <div style="font-weight:700;font-size:1.16em;margin-bottom:9px;">${title}</div>
+        <textarea id="emltxt" style="width:99%;height:220px;font-family:monospace;font-size:.97em;">${text.replace(/</g,"&lt;")}</textarea>
+        <br><button onclick="copyEmailText()" style="margin:8px 0 0 0;">📋 Kopieer</button>
+        <button onclick="document.getElementById('emailpopup').remove()" style="margin:8px 0 0 12px;">Sluit</button>
+        </div>`;
+      document.body.appendChild(div);
+      setTimeout(()=>{document.getElementById('emltxt').select();},100);
+    }
+    function copyEmailText(){
+      let t = document.getElementById('emltxt');
+      t.select(); t.setSelectionRange(0,99999);
+      document.execCommand("copy");
+    }
+    
+    document.getElementById('importfile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const json = JSON.parse(e.target.result);
+          if(json && typeof json === 'object' && Array.isArray(json.aantallen)) {
+            localStorage.setItem('klantnaam', json.klantnaam || '');
+            localStorage.setItem('kistnums', json.kistnums || '');
+            localStorage.setItem('kistcount', json.kistcount || '1');
+            localStorage.setItem('aantallen', JSON.stringify(json.aantallen));
+            openPaneel('inventarisatie');
+            flash('Bestand hersteld!');
+          }
+          else alert('Ongeldig bestand!');
+        }
+        catch {
+          alert('Kon bestand niet lezen!');
+        }
+      };
+      reader.readAsText(file);
+    });
+  </script>
 </body>
 </html>
