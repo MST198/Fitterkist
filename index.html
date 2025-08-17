@@ -5,40 +5,58 @@
 <title>Fitterskist App met Wachtwoord</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-html, body {margin:0; padding:0; height:100%; background:#3f888f; font-family: Arial, sans-serif; color: #002626;}
-#pwlock { position: fixed; top:0; left:0; right:0; bottom:0; background:#3f888f; display:flex; align-items:center; justify-content:center; z-index: 10000;}
-#pwbox { background: rgba(255,255,255,0.13); border-radius: 22px; padding: 42px 24px 36px 24px; width: 390px; max-width: 98vw; box-shadow: 0 6px 32px #23515155; text-align: center;}
-#pwbox svg { max-width: 260px; width: 99vw; margin: auto; margin-bottom: 38px; display: block;}
-#pwbox label { color: white; font-weight: bold; font-size: 1.28em; margin-bottom: 14px; display: block;}
-#pwbox input { width: 160px; font-size: 1.23em; border-radius: 7px; padding: 10px 8px; border: 1.5px solid #21969d; text-align: center; outline: none; letter-spacing: 0.17em;}
-#pwbox input:focus { border-color: #e7bb41;}
-#pwbox button { margin-top: 18px; width: 120px; font-weight: bold; font-size: 1.2em; background: #e7bb41; border-radius: 7px; color:#293a33; border:none; padding: 10px 0; cursor:pointer; box-shadow: 0 2px 10px #0002;}
-#pwbox button:hover { background:#fffbe7; color:#0a282d;}
-#pwerror { margin-top:15px; color:#c33; font-weight:bold; display:none;}
-.hide { display: none !important; }
-header { background:#002626; color:#e7bb41; padding: 15px 0 15px 0; text-align:center; position: relative; font-weight: bold; font-size: 1.22em;}
-.menu-btn { position: absolute; right: 20px; top: 14px; background: none; border: none; color: #e7bb41; font-size: 2em; cursor: pointer; padding: 0; user-select: none;}
-.menu-panel { display: none; position: fixed; top: 0; right: 0; width: 200px; background: #fff; border-radius: 0 0 0 13px; box-shadow: -2px 3px 16px rgba(0,0,0,0.3); z-index: 9999;}
-.menu-panel ul { list-style: none; margin:0; padding:0;}
-.menu-panel li { border-bottom: 1px solid #eee;}
-.menu-panel li:last-child { border-bottom:none;}
-.menu-panel button { width: 100%; text-align: left; background: none; border: none; font-size: 1.1em; color: #222; padding: 15px 20px; cursor:pointer;}
-.menu-panel button:hover { background: #e7bb41; color: #002626;}
-.menu-panel .closebtn { text-align: right; font-size: 1.5em; background:none; border:none; color:#999; padding: 10px 15px 10px 0; cursor:pointer;}
-.container { max-width: 900px; margin: 1rem auto; padding: 8px; background: #d3d0cb; border-radius: 8px;}
-label { font-weight: bold; display: block; margin-bottom: 5px;}
-input[type=text], input[type=number] { width: 300px; max-width: 100%; padding: 8px; border-radius: 4px; border:1px solid #ccc; margin-bottom: 15px; font-size: 1rem;}
-button, button.start-btn { background: #3f888f; color: #fff; font-size: 1rem; border: none; border-radius: 5px; padding: 10px 14px; cursor: pointer; transition: background 0.25s; margin: 5px 0; user-select: none;}
-button.start-btn { background: #002626; font-weight: bold; font-size: 1.11rem; padding: 13px 20px;}
-button:hover { background: #e7bb41; color: #002626;}
-button.start-btn:hover { background: #e7bb41; color: #002626;}
-@media (max-width: 600px) {.container {padding:5px;} #pwbox {width:98vw;} #pwbox svg {max-width:89vw;}}
+html, body {margin:0; padding:0; height:100%; background:#3f888f; font-family: Arial,sans-serif; color:#002626;}
+#pwlock { position:fixed;top:0;left:0;right:0;bottom:0;background:#3f888f;display:flex;align-items:center;justify-content:center;z-index:10000;}
+#pwbox { background:rgba(255,255,255,0.13);border-radius:22px;padding:42px 24px 36px 24px;width:390px;max-width:98vw;box-shadow:0 6px 32px #23515155;text-align:center;}
+#pwbox svg {max-width:260px;width:99vw;margin:auto;margin-bottom:38px;display:block;}
+#pwbox label {color:white;font-weight:bold;font-size:1.28em;margin-bottom:14px;display:block;}
+#pwbox input {width:160px;font-size:1.23em;border-radius:7px;padding:10px 8px;border:1.5px solid #21969d;text-align:center;outline:none;letter-spacing:0.17em;}
+#pwbox input:focus {border-color:#e7bb41;}
+#pwbox button {margin-top:18px;width:120px;font-weight:bold;font-size:1.2em;background:#e7bb41;border-radius:7px;color:#293a33;border:none;padding:10px 0;cursor:pointer;box-shadow:0 2px 10px #0002;}
+#pwbox button:hover {background:#fffbe7;color:#0a282d;}
+#pwerror {margin-top:15px;color:#c33;font-weight:bold;display:none;}
+.hide {display:none !important;}
+header {background:#002626;color:#e7bb41;padding:15px 0 15px 0;text-align:center;position:relative;font-weight:bold;font-size:1.22em;}
+.menu-btn {position:absolute;right:20px;top:14px;background:none;border:none;color:#e7bb41;font-size:2em;cursor:pointer;padding:0;user-select:none;}
+.menu-panel {display:none;position:fixed;top:0;right:0;width:200px;background:#fff;border-radius:0 0 0 13px;box-shadow:-2px 3px 16px rgba(0,0,0,0.3);z-index:9999;}
+.menu-panel ul {list-style:none;margin:0;padding:0;}
+.menu-panel li {border-bottom:1px solid #eee;}
+.menu-panel li:last-child {border-bottom:none;}
+.menu-panel button {width:100%;text-align:left;background:none;border:none;font-size:1.1em;color:#222;padding:15px 20px;cursor:pointer;}
+.menu-panel button:hover {background:#e7bb41;color:#002626;}
+.menu-panel .closebtn {text-align:right;font-size:1.5em;background:none;border:none;color:#999;padding:10px 15px 10px 0;cursor:pointer;}
+.container {max-width:900px;margin:1rem auto;padding:8px;background:#d3d0cb;border-radius:8px;}
+label{font-weight:bold;display:block;margin-bottom:5px;}
+input[type=text],input[type=number]{width:300px;max-width:100%;padding:8px;border-radius:4px;border:1px solid #ccc;margin-bottom:12px;font-size:1rem;}
+button,button.start-btn{background:#3f888f;color:#fff;font-size:1rem;border:none;border-radius:5px;padding:10px 14px;cursor:pointer;transition:background 0.25s;margin:5px 0;user-select:none;}
+button.start-btn{background:#002626;font-weight:bold;font-size:1.11rem;padding:13px 20px;}
+button:hover{background:#e7bb41;color:#002626;}
+button.start-btn:hover{background:#e7bb41;color:#002626;}
+.art-list{display:flex;flex-direction:column;gap:8px;}
+.art-card{display:flex;align-items:center;background:#fff;border-radius:6px;padding:8px;box-shadow:0 1px 2px rgba(0,38,38,0.1);min-height:60px;}
+.art-img{width:32px;height:32px;font-size:1.3em;display:flex;justify-content:center;align-items:center;background:#e7e5df;border-radius:5px;border:1px solid #e7bb41;flex-shrink:0;margin-left:12px;}
+.art-info{flex:1;padding-right:12px;}
+.art-info h4{margin:0 0 3px 0;font-size:1.05rem;line-height:1.25;}
+.art-info .details{font-size:0.8rem;color:#555;line-height:1.2;}
+.art-actions{display:flex;align-items:center;gap:6px;margin-right:12px;}
+.art-actions input{width:48px;font-size:0.95rem;padding:4px 6px;text-align:center;border-radius:4px;border:1px solid #ccc;}
+.art-actions button{padding:4px 10px;font-size:1rem;min-width:28px;}
+table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff;font-size:0.9rem;}
+th,td{border:1px solid #ddd;padding:6px 8px;text-align:left;}
+th{background:#3f888f;color:#fff;font-weight:bold;font-size:0.85rem;}
+tfoot td{font-weight:bold;background:#e7bb41;}
+td.mistcell{background:#ffeaea !important;color:#c33 !important;font-weight:bold;}
+.overzicht-buttons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px;}
+.overzicht-buttons button{flex:1;min-width:150px;max-width:220px;}
+.status-info{background:#e7bb41;color:#002626;padding:10px;border-radius:6px;margin-bottom:12px;text-align:center;font-weight:600;}
+@media (max-width:600px){body,html{font-size:14px;}header h1{font-size:1.1rem;}.menu-btn{font-size:1.8rem;width:34px;height:34px;}.art-card{flex-direction:column;align-items:flex-start;}.art-actions{margin:10px 0 0 0;justify-content:flex-start;}.art-actions input{width:40px;}input[type=text],input[type=number]{width:100%;}.menu-panel{width:90vw;max-width:280px;} .container{padding:5px;}#pwbox{width:98vw;}#pwbox svg{max-width:89vw;}}
 </style>
 </head>
 <body>
 
+<!-- Wachtwoordscherm -->
 <div id="pwlock">
-  <div id="pwbox" role="dialog" aria-modal="true" aria-labelledby="ptitle">
+  <div id="pwbox" role="dialog" aria-modal="true">
     <svg aria-hidden="true" focusable="false" viewBox="0 0 500 210">
       <rect x="50" y="75" width="400" height="110" rx="26" fill="#383c43" stroke="#222" stroke-width="5"/>
       <rect x="70" y="44" width="360" height="48" rx="14" fill="#24282e" stroke="#191a1c" stroke-width="2.8"/>
@@ -49,14 +67,13 @@ button.start-btn:hover { background: #e7bb41; color: #002626;}
       <rect x="204" y="122" width="92" height="37" rx="8" fill="#e7bb41"/>
       <text x="250" y="149" font-size="32" fill="#2b2b1a" font-family="Arial" text-anchor="middle" font-weight="bold" letter-spacing="4.6">STANLEY</text>
     </svg>
-    <label id="ptitle" for="pwinput">Voer wachtwoord in</label>
-    <input type="password" id="pwinput" aria-describedby="pwerror" placeholder="Wachtwoord" autocomplete="off" />
+    <label for="pwinput">Voer wachtwoord in</label>
+    <input type="password" id="pwinput" placeholder="Wachtwoord" autocomplete="off" />
     <button type="button" onclick="checkpw()">Login</button>
     <div id="pwerror" role="alert" aria-live="assertive">Fout wachtwoord</div>
   </div>
 </div>
 
-<!-- App -->
 <header>
   Gereedschapskist Inventarisatie
   <button title="Menu" aria-label="Menu openen" class="menu-btn" onclick="toggleMenu()">☰</button>
@@ -65,16 +82,18 @@ button.start-btn:hover { background: #e7bb41; color: #002626;}
   <button class="closebtn" aria-label="Sluiten" onclick="closeMenu()">&times;</button>
   <ul>
     <li><button onclick="resetAlles()"><strong>🔄 Reset (start opnieuw)</strong></button></li>
-    <!-- hier je andere knoppen -->
+    <li><button onclick="navTo('inventarisatie-paneel')">📝 Tellen</button></li>
+    <li><button onclick="navTo('overzicht-paneel')">📊 Overzicht</button></li>
   </ul>
 </nav>
 
 <div class="container">
+
   <div id="start-paneel" class="panel hide">
     <label for="klantnaam">Klantnaam:</label>
-    <input type="text" id="klantnaam" autocomplete="off" placeholder="Bedrijfsnaam of klant..." />
+    <input type="text" id="klantnaam" placeholder="Bedrijfsnaam of klant..." />
     <label for="kistnums">Kistnummer(s):</label>
-    <input type="text" id="kistnums" autocomplete="off" placeholder="101, 102 of 101 102..." />
+    <input type="text" id="kistnums" placeholder="101, 102 of 101 102..." />
     <small style="color:#444;display:block; margin-bottom:12px;">Meerdere nummers gescheiden door komma of spatie</small>
     <label for="kistcount">Hoeveel kisten tellen?</label>
     <input type="number" id="kistcount" min="1" value="1" />
@@ -82,14 +101,18 @@ button.start-btn:hover { background: #e7bb41; color: #002626;}
     <hr />
     <button onclick="document.getElementById('importfile').click()">📁 Herstel van bestand</button>
     <input type="file" id="importfile" style="display:none" accept=".json" />
-    <small style="color:#444; display:block; margin-top:6px;">Zoek een opgeslagen bestand als: <b>Fitterskist YYMMDD.json</b></small>
+    <small style="color:#444; display:block; margin-top:6px;">Zoek een bestand als: <b>Fitterskist YYMMDD.json</b></small>
   </div>
-  <!-- Voeg hier je andere panelen toe -->
+
+  <!-- Voeg je telscherm, overzicht, backup, email etc. hier toe. Bijvoorbeeld zoals in je vorige werkende Google Sites code: -->
+  <!-- <div id="inventarisatie-paneel" class="panel hide"> ... </div> -->
+  <!-- <div id="overzicht-paneel" class="panel hide"> ... </div> -->
 </div>
+<div id="flashmsg" style="display:none;position:fixed;right:30px;top:80px;z-index:999;background:#3bb273;color:#fff;padding:9px 16px;border-radius:7px;font-weight:bold;box-shadow:0 2px 6px #2228;"></div>
 
 <script>
+// == WACHTWOORD EN LOGIN FLOW ==
 const PW = "1808";
-// -- Login met flag in localStorage --
 function checkpw() {
   var val = document.getElementById('pwinput').value.trim();
   if (val === PW) {
@@ -108,7 +131,6 @@ document.getElementById('pwinput').addEventListener('keydown', function(e){
   if (e.key === 'Enter') checkpw();
 });
 window.addEventListener('DOMContentLoaded', function(){
-  // Toon password-scherm als je NIET bent ingelogd
   if (localStorage.getItem('authed') === '1') {
     document.getElementById('pwlock').style.display = 'none';
     showStartPaneel();
@@ -118,25 +140,32 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 });
 
-// -- Terug naar begin (start-paneel) --
+// == NAAR BEGINPANEEL ==
 function showStartPaneel() {
   document.querySelectorAll('.panel').forEach(el => el.classList.add('hide'));
   document.getElementById('start-paneel').classList.remove('hide');
+  // Vul velden met evt. localStorage-data
+  document.getElementById('klantnaam').value = localStorage.getItem('klantnaam') || '';
+  document.getElementById('kistnums').value = localStorage.getItem('kistnums') || '';
+  document.getElementById('kistcount').value = localStorage.getItem('kistcount') || '1';
 }
 
-// -- Reset: alleen gegevens wissen maar direct ingelogd blijven! --
+// == RESET behoudt loginstatus maar wist alle andere gegevens ==
 function resetAlles() {
-  // Bewaar login-status, wis rest!
-  localStorage.clear();
-  localStorage.setItem('authed', '1');
+  localStorage.removeItem('klantnaam');
+  localStorage.removeItem('kistnums');
+  localStorage.removeItem('kistcount');
+  localStorage.removeItem('aantallen');
+  localStorage.removeItem('backupfitterskist');
+  // ... voeg hier alle overige localStorage keys van jouw app toe die je wilt wissen ...
+  localStorage.setItem('authed', '1'); // Blijf ingelogd!
   showStartPaneel();
-  // Optioneel: velden leegmaken (als je wilt)
   document.getElementById('klantnaam').value = '';
   document.getElementById('kistnums').value = '';
   document.getElementById('kistcount').value = '1';
 }
 
-// -- Menu --
+// == Menu ==
 function toggleMenu() {
   const menu = document.getElementById('menu-panel');
   menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
@@ -145,14 +174,18 @@ function closeMenu() {
   document.getElementById('menu-panel').style.display = 'none';
 }
 
-// --- Je verdere app-code en panelen hieronder ---
+// == Begin van jouw telling-functionaliteit/overzicht etc ==
+
+// Voorbeeld: telling starten (bewaren)
 function startInventarisatie(){
-  // Example code: sla eventuele gegevens op
   localStorage.setItem('klantnaam', document.getElementById('klantnaam').value || '');
   localStorage.setItem('kistnums', document.getElementById('kistnums').value || '');
   localStorage.setItem('kistcount', document.getElementById('kistcount').value || '1');
-  alert('Telling gestart! (hier komt je telscherm)');
+  alert('Telling gestart! (hier schakel je de volgende panelen in)');
 }
+// Zie jouw Google Sites versie voor de verder uitgebreide panelen/scripts voor tellen, overzicht, email, CSV etc.
+// Voeg die direct hier in als losse <div>s (met unieke IDs), laat ze starten met class="hide", en navigeer ernaar door hide-class te toggelen.
+
 </script>
 </body>
 </html>
