@@ -2,12 +2,12 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8" />
-<title>Fitterskist App met Wachtwoord</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fitterskist App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <style>
 html, body {margin:0; padding:0; height:100%; background:#3f888f; font-family: Arial,sans-serif; color:#002626;}
-#pwlock { position:fixed;top:0;left:0;right:0;bottom:0;background:#3f888f;display:flex;align-items:center;justify-content:center;z-index:10000;}
-#pwbox { background:rgba(255,255,255,0.13);border-radius:22px;padding:42px 24px 36px 24px;width:390px;max-width:98vw;box-shadow:0 6px 32px #23515155;text-align:center;}
+#pwlock {position:fixed;top:0;left:0;right:0;bottom:0;background:#3f888f;display:flex;align-items:center;justify-content:center;z-index:10000;}
+#pwbox {background:rgba(255,255,255,0.13);border-radius:22px;padding:42px 24px 36px 24px;width:390px;max-width:98vw;box-shadow:0 6px 32px #23515155;text-align:center;}
 #pwbox svg {max-width:260px;width:99vw;margin:auto;margin-bottom:38px;display:block;}
 #pwbox label {color:white;font-weight:bold;font-size:1.28em;margin-bottom:14px;display:block;}
 #pwbox input {width:160px;font-size:1.23em;border-radius:7px;padding:10px 8px;border:1.5px solid #21969d;text-align:center;outline:none;letter-spacing:0.17em;}
@@ -82,13 +82,14 @@ td.mistcell{background:#ffeaea !important;color:#c33 !important;font-weight:bold
   <button class="closebtn" aria-label="Sluiten" onclick="closeMenu()">&times;</button>
   <ul>
     <li><button onclick="resetAlles()"><strong>🔄 Reset (start opnieuw)</strong></button></li>
-    <li><button onclick="navTo('inventarisatie-paneel')">📝 Tellen</button></li>
-    <li><button onclick="navTo('overzicht-paneel')">📊 Overzicht</button></li>
+    <li><button onclick="openPaneel('inventarisatie')">📝 Tellen</button></li>
+    <li><button onclick="openPaneel('overzicht')">📊 Overzicht</button></li>
   </ul>
 </nav>
 
 <div class="container">
 
+  <!-- Beginpaneel: klant/kist/hoeveelheid invullen -->
   <div id="start-paneel" class="panel hide">
     <label for="klantnaam">Klantnaam:</label>
     <input type="text" id="klantnaam" placeholder="Bedrijfsnaam of klant..." />
@@ -104,21 +105,82 @@ td.mistcell{background:#ffeaea !important;color:#c33 !important;font-weight:bold
     <small style="color:#444; display:block; margin-top:6px;">Zoek een bestand als: <b>Fitterskist YYMMDD.json</b></small>
   </div>
 
-  <!-- Voeg je telscherm, overzicht, backup, email etc. hier toe. Bijvoorbeeld zoals in je vorige werkende Google Sites code: -->
-  <!-- <div id="inventarisatie-paneel" class="panel hide"> ... </div> -->
-  <!-- <div id="overzicht-paneel" class="panel hide"> ... </div> -->
+  <div id="inventarisatie-paneel" class="panel hide">
+    <div><b>Klant:</b> <span id="klantnaam-out"></span> | <b>Kist(en):</b> <span id="kistnums-out"></span> | <b>Aantal:</b> <span id="aantal-kisten"></span></div>
+    <div id="art-list" class="art-list"></div>
+    <button onclick="openPaneel('start')">⬅️ Terug</button>
+  </div>
+
+  <div id="overzicht-paneel" class="panel hide">
+    <div><b>Klant:</b> <span id="klantnaam-ovz"></span> | <b>Kist(en):</b> <span id="kistnums-ovz"></span></div>
+    <div class="overzicht-buttons">
+      <button onclick="maakVermissingslijst()">📋 Maak vermissingslijst</button>
+      <button onclick="downloadCSV()" id="csv-btn" style="display:none;">📄 Download CSV</button>
+      <button onclick="emailLeverancier()" id="lev-btn" style="display:none;">📧 Mail leverancier</button>
+      <button onclick="emailKlant()" id="klant-btn" style="display:none;">💼 Mail klant</button>
+      <button onclick="printLijst()" id="print-btn" style="display:none;">🖨️ Print</button>
+    </div>
+    <div id="vermissingslijst-sectie" style="display:none;">
+      <h3>🛒 Vermissingslijst</h3>
+      <div id="status-info" class="status-info"></div>
+      <div id="lijst-tabel"></div>
+    </div>
+    <button onclick="openPaneel('start')" style="margin-top:10px;">⬅️ Terug</button>
+  </div>
 </div>
+
 <div id="flashmsg" style="display:none;position:fixed;right:30px;top:80px;z-index:999;background:#3bb273;color:#fff;padding:9px 16px;border-radius:7px;font-weight:bold;box-shadow:0 2px 6px #2228;"></div>
 
 <script>
-// == WACHTWOORD EN LOGIN FLOW ==
+/* --- ARTIKELEN --- */
+const artikelen = [
+  {leverancier_nr:"2486607", ons_nr:"11675001", naam:"Gereedschapkist Fatmax", prijs:54.84, img:"🧰"},
+  {leverancier_nr:"4130507", ons_nr:"11675002", naam:"M-LOY Hangslot 40MM", prijs:8.16, img:"🔐"},
+  {leverancier_nr:"2399308", ons_nr:"11675003", naam:"Metaal beugelzaag 300mm", prijs:18.91, img:"🪚"},
+  {leverancier_nr:"2399306", ons_nr:"11675004", naam:"Zaagblad metaal 300mm", prijs:1.61, img:"⚙️"},
+  {leverancier_nr:"2117581", ons_nr:"11675005", naam:"1716P schraper", prijs:14.18, img:"🔪"},
+  {leverancier_nr:"6692052", ons_nr:"11675006", naam:"Sleufplaatbeitel", prijs:14.31, img:"🪛"},
+  {leverancier_nr:"11807240", ons_nr:"11675007", naam:"Gasfles sleutel", prijs:9.26, img:"🗝️"},
+  {leverancier_nr:"2477111", ons_nr:"11675008", naam:"Centerpons 120mm", prijs:2.79, img:"📍"},
+  {leverancier_nr:"2477107", ons_nr:"11675009", naam:"Koudbeitel 200mm", prijs:6.91, img:"📌"},
+  {leverancier_nr:"4696786", ons_nr:"11675010", naam:"Kraspen Elzet", prijs:4.77, img:"🖋️"},
+  {leverancier_nr:"2448116", ons_nr:"11675011", naam:"Pijptang 310mm", prijs:20.53, img:"⭕"},
+  {leverancier_nr:"2396764", ons_nr:"11675012", naam:"Moersleutel zwart 300mm", prijs:19.41, img:"🔩"},
+  {leverancier_nr:"3046217", ons_nr:"11675013", naam:"Metaalvijl rond 250mm", prijs:4.13, img:"🗡️"},
+  {leverancier_nr:"3046216", ons_nr:"11675014", naam:"Metaalvijl halfrond 250mm", prijs:4.95, img:"🗡️"},
+  {leverancier_nr:"10021954", ons_nr:"11675015", naam:"Waterpomp tang 250mm", prijs:14.04, img:"💧"},
+  {leverancier_nr:"2300751", ons_nr:"11675016", naam:"Ring-steeksleutel 10mm", prijs:2.81, img:"🔧"},
+  {leverancier_nr:"2300746", ons_nr:"11675017", naam:"Ring-steeksleutel 13mm", prijs:3.33, img:"🔧"},
+  {leverancier_nr:"2300747", ons_nr:"11675018", naam:"Ring-steeksleutel 17mm", prijs:4.43, img:"🔧"},
+  {leverancier_nr:"2300745", ons_nr:"11675019", naam:"Ring-steeksleutel 19mm", prijs:5.00, img:"🔧"},
+  {leverancier_nr:"2300737", ons_nr:"11675020", naam:"Ring-steeksleutel 22mm", prijs:6.60, img:"🔧"},
+  {leverancier_nr:"2300738", ons_nr:"11675021", naam:"Ring-steeksleutel 24mm", prijs:7.54, img:"🔧"},
+  {leverancier_nr:"2300735", ons_nr:"11675022", naam:"Ring-steeksleutel 27mm", prijs:9.89, img:"🔧"},
+  {leverancier_nr:"2300740", ons_nr:"11675023", naam:"Ring-steeksleutel 30mm", prijs:11.55, img:"🔧"},
+  {leverancier_nr:"2300739", ons_nr:"11675024", naam:"Ring-steeksleutel 32mm", prijs:13.41, img:"🔧"},
+  {leverancier_nr:"2477115", ons_nr:"11675025", naam:"Breekijzer 400mm", prijs:12.95, img:"⚒️"},
+  {leverancier_nr:"188715", ons_nr:"11675026", naam:"Wig 2,0 KG", prijs:22.24, img:"🔺"},
+  {leverancier_nr:"5448459", ons_nr:"11675027", naam:"Rolbandmaat 5m", prijs:4.23, img:"🚰"},
+  {leverancier_nr:"2447236", ons_nr:"11675028", naam:"Aluminium waterpas 400mm", prijs:18.75, img:"📏"},
+  {leverancier_nr:"666901", ons_nr:"11675029", naam:"Plaatwinkelhaak 300mm", prijs:14.63, img:"📐"},
+  {leverancier_nr:"2269601", ons_nr:"11675030", naam:"bankhamer 1000gram", prijs:18.38, img:"🔨"},
+  {leverancier_nr:"7425836", ons_nr:"11675031", naam:"Bankhamer 2000gram", prijs:30.93, img:"🔨"},
+  {leverancier_nr:"5812679", ons_nr:"11675032", naam:"Vuisthamer 1500gram", prijs:18.86, img:"🔨"},
+  {leverancier_nr:"593999", ons_nr:"11675033", naam:"schroevendraaier softfinish", prijs:18.46, img:"🪛"},
+  {leverancier_nr:"850077", ons_nr:"11675034", naam:"Staalborstel 3 rij", prijs:2.45, img:"🚿"}
+]; artikelen.forEach(a=>a.standaard=1);
+
+let aantallen = [];
+let huidigeVermissingen = [];
 const PW = "1808";
+
+/* --- LOGIN EN PANELS --- */
 function checkpw() {
   var val = document.getElementById('pwinput').value.trim();
   if (val === PW) {
     localStorage.setItem('authed', '1');
     document.getElementById('pwlock').style.display = 'none';
-    showStartPaneel();
+    openPaneel('start');
   } else {
     var err = document.getElementById('pwerror');
     err.style.display = 'block';
@@ -133,39 +195,34 @@ document.getElementById('pwinput').addEventListener('keydown', function(e){
 window.addEventListener('DOMContentLoaded', function(){
   if (localStorage.getItem('authed') === '1') {
     document.getElementById('pwlock').style.display = 'none';
-    showStartPaneel();
+    openPaneel(localStorage.getItem('lastpaneel')||'start');
   } else {
     document.getElementById('pwlock').style.display = 'flex';
     document.getElementById('pwinput').focus();
   }
 });
 
-// == NAAR BEGINPANEEL ==
-function showStartPaneel() {
+function openPaneel(paneel){
   document.querySelectorAll('.panel').forEach(el => el.classList.add('hide'));
-  document.getElementById('start-paneel').classList.remove('hide');
-  // Vul velden met evt. localStorage-data
-  document.getElementById('klantnaam').value = localStorage.getItem('klantnaam') || '';
-  document.getElementById('kistnums').value = localStorage.getItem('kistnums') || '';
-  document.getElementById('kistcount').value = localStorage.getItem('kistcount') || '1';
+  document.getElementById(paneel+'-paneel').classList.remove('hide');
+  localStorage.setItem('lastpaneel', paneel);
+  if(paneel==='inventarisatie'){ buildArtikellijst(); updateKlantBalk(); }
+  if(paneel==='overzicht'){ updateKlantBalk(); }
+  if(paneel==='start'){ loadStartData(); }
 }
 
-// == RESET behoudt loginstatus maar wist alle andere gegevens ==
+/* --- RESET: login status blijft, rest wordt gewist, terug naar start-paneel --- */
 function resetAlles() {
-  localStorage.removeItem('klantnaam');
-  localStorage.removeItem('kistnums');
-  localStorage.removeItem('kistcount');
-  localStorage.removeItem('aantallen');
-  localStorage.removeItem('backupfitterskist');
-  // ... voeg hier alle overige localStorage keys van jouw app toe die je wilt wissen ...
-  localStorage.setItem('authed', '1'); // Blijf ingelogd!
-  showStartPaneel();
+  Object.keys(localStorage).forEach(k=>{
+    if(k!=='authed') localStorage.removeItem(k)
+  });
+  openPaneel('start');
   document.getElementById('klantnaam').value = '';
   document.getElementById('kistnums').value = '';
   document.getElementById('kistcount').value = '1';
 }
 
-// == Menu ==
+/* --- MENU --- */
 function toggleMenu() {
   const menu = document.getElementById('menu-panel');
   menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
@@ -173,19 +230,69 @@ function toggleMenu() {
 function closeMenu() {
   document.getElementById('menu-panel').style.display = 'none';
 }
-
-// == Begin van jouw telling-functionaliteit/overzicht etc ==
-
-// Voorbeeld: telling starten (bewaren)
+/* --- DATA --- */
 function startInventarisatie(){
-  localStorage.setItem('klantnaam', document.getElementById('klantnaam').value || '');
-  localStorage.setItem('kistnums', document.getElementById('kistnums').value || '');
-  localStorage.setItem('kistcount', document.getElementById('kistcount').value || '1');
-  alert('Telling gestart! (hier schakel je de volgende panelen in)');
+  localStorage.setItem('klantnaam', document.getElementById('klantnaam').value||'');
+  localStorage.setItem('kistnums', document.getElementById('kistnums').value||'');
+  localStorage.setItem('kistcount', document.getElementById('kistcount').value||'1');
+  // Lege tellingen klaarzetten
+  aantallen = artikelen.map(()=>0);
+  localStorage.setItem('aantallen', JSON.stringify(aantallen));
+  openPaneel('inventarisatie');
 }
-// Zie jouw Google Sites versie voor de verder uitgebreide panelen/scripts voor tellen, overzicht, email, CSV etc.
-// Voeg die direct hier in als losse <div>s (met unieke IDs), laat ze starten met class="hide", en navigeer ernaar door hide-class te toggelen.
+function buildArtikellijst(){
+  const kl = document.getElementById('art-list');
+  kl.innerHTML = '';
+  aantallen = JSON.parse(localStorage.getItem('aantallen')||'[]');
+  if(aantallen.length!==artikelen.length) aantallen = artikelen.map(()=>0);
+  artikelen.forEach((art, i) => {
+    const moet = art.standaard*(parseInt(localStorage.getItem('kistcount'))||1);
+    const el = document.createElement('div');
+    el.className = 'art-card';
+    el.innerHTML = `
+      <div class="art-info">
+        <h4>${art.naam}</h4>
+        <div class="details">Art. nr: ${art.ons_nr}<br>Per kist: ${art.standaard} | Totaal: ${moet}</div>
+      </div>
+      <div class="art-actions">
+        <button onclick="veranderAantal(${i},-1)">-</button>
+        <input type="number" min="0" value="${aantallen[i]||0}" id="a${i}" onchange="updateAantal(${i},this)">
+        <button onclick="veranderAantal(${i},1)">+</button>
+      </div>
+      <div class="art-img">${art.img}</div>
+      `;
+      kl.appendChild(el);
+  });
+}
+function veranderAantal(i,d){
+  aantallen[i]=Math.max(0,(aantallen[i]||0)+d);
+  document.getElementById('a'+i).value = aantallen[i];
+  localStorage.setItem('aantallen', JSON.stringify(aantallen));
+}
+function updateAantal(i,el){
+  aantallen[i]=Math.max(0,parseInt(el.value)||0);
+  localStorage.setItem('aantallen', JSON.stringify(aantallen));
+}
+function updateKlantBalk(){
+  document.getElementById('klantnaam-out')&&(document.getElementById('klantnaam-out').textContent=localStorage.getItem('klantnaam')||'');
+  document.getElementById('kistnums-out')&&(document.getElementById('kistnums-out').textContent=localStorage.getItem('kistnums')||'');
+  document.getElementById('aantal-kisten')&&(document.getElementById('aantal-kisten').textContent=localStorage.getItem('kistcount')||'');
+  document.getElementById('klantnaam-ovz')&&(document.getElementById('klantnaam-ovz').textContent=localStorage.getItem('klantnaam')||'');
+  document.getElementById('kistnums-ovz')&&(document.getElementById('kistnums-ovz').textContent=localStorage.getItem('kistnums')||'');
+}
+function loadStartData(){
+  document.getElementById('klantnaam').value = localStorage.getItem('klantnaam')||'';
+  document.getElementById('kistnums').value = localStorage.getItem('kistnums')||'';
+  document.getElementById('kistcount').value = localStorage.getItem('kistcount')||'1';
+}
 
+/* Overzicht, mail, backup enz kan je hieronder verder toevoegen (volgens jouw bestand) */
+function maakVermissingslijst(){}
+function downloadCSV(){}
+function emailLeverancier(){}
+function emailKlant(){}
+function printLijst(){}
+document.getElementById('importfile').addEventListener('change', function(e) {});
 </script>
 </body>
 </html>
